@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import cors from "cors";
 import express from "express";
 import jwt from "jsonwebtoken";
-import connection from "./db.js";
+import connection from "./config/db.js";
 
 const app = express();
 app.use(cors());
