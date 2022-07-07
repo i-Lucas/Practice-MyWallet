@@ -3,19 +3,7 @@ import '../config/setup.js';
 
 export async function PostFinancialEventsController(req, res) {
 
-    const authorization = req.headers.authorization || "";
-    const token = authorization.replace("Bearer ", "");
-
     try {
-
-        if (!token) return res.sendStatus(401);
-        let user;
-
-        try {
-            user = jwt.verify(token, process.env.JWT_SECRET);
-        } catch {
-            return res.sendStatus(401);
-        }
 
         const { value, type } = req.body;
 
@@ -34,20 +22,7 @@ export async function PostFinancialEventsController(req, res) {
 
 export async function GetFinancialEventsController(req, res) {
 
-    const authorization = req.headers.authorization || "";
-    const token = authorization.replace("Bearer ", "");
-
     try {
-
-        if (!token) return res.sendStatus(401);
-
-        let user;
-
-        try {
-            user = jwt.verify(token, process.env.JWT_SECRET);
-        } catch {
-            return res.sendStatus(401);
-        }
 
         const events = await financialRepo.UserEvents(user.id);
         res.send(events.rows);
@@ -57,20 +32,7 @@ export async function GetFinancialEventsController(req, res) {
 
 export async function GetFinancialEventsSumController(req, res) {
 
-    const authorization = req.headers.authorization || "";
-    const token = authorization.replace("Bearer ", "");
-
     try {
-
-        if (!token) return res.sendStatus(401);
-
-        let user;
-
-        try {
-            user = jwt.verify(token, process.env.JWT_SECRET);
-        } catch {
-            return res.sendStatus(401);
-        }
 
         const events = await financialRepo.UserEvents(user.id);
 
