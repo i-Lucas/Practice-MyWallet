@@ -1,7 +1,9 @@
-export async function PostSingupMiddleware() {
+export async function PostSingupMiddleware(req, res, next) {
 
+    next();
 }
 
-export async function PostSinginMiddleware() {
+export async function PostSinginMiddleware(req, res, next) {
 
+    next();
 }

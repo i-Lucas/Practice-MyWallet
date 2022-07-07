@@ -1,11 +1,16 @@
-export async function PostFinancialEventsMiddleware() {
+export async function PostFinancialEventsMiddleware(req, res, next) {
+
+    next();
+}
+
+export async function GetFinancialEventsMiddleware(req, res, next) {
+
+    next();
 
 }
 
-export async function GetFinancialEventsMiddleware() {
+export async function GetFinancialEventsSumMiddleware(req, res, next) {
 
-}
-
-export async function GetFinancialEventsSumMiddleware() {
+    next();
 
 }
