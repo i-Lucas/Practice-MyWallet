@@ -1,4 +1,4 @@
-import connection from '../config/db.js';
+import financialRepo from '../repositories/financialRepository.js';
 import '../config/setup.js';
 
 export async function PostFinancialEventsController(req, res) {
@@ -26,11 +26,7 @@ export async function PostFinancialEventsController(req, res) {
 
         if (value < 0) return res.sendStatus(422);
 
-        await connection.query(
-            `INSERT INTO "financialEvents" ("userId", "value", "type") VALUES ($1, $2, $3)`,
-            [user.id, value, type]
-        );
-
+        await financialRepo.NewEvent(user.id, value, type);
         res.sendStatus(201);
 
     } catch (err) { return res.status(500).send(err); }
@@ -53,11 +49,7 @@ export async function GetFinancialEventsController(req, res) {
             return res.sendStatus(401);
         }
 
-        const events = await connection.query(
-            `SELECT * FROM "financialEvents" WHERE "userId"=$1 ORDER BY "id" DESC`,
-            [user.id]
-        );
-
+        const events = await financialRepo.UserEvents(user.id);
         res.send(events.rows);
 
     } catch (err) { return res.status(500).send(err); }
@@ -80,10 +72,7 @@ export async function GetFinancialEventsSumController(req, res) {
             return res.sendStatus(401);
         }
 
-        const events = await connection.query(
-            `SELECT * FROM "financialEvents" WHERE "userId"=$1 ORDER BY "id" DESC`,
-            [user.id]
-        );
+        const events = await financialRepo.UserEvents(user.id);
 
         const sum = events.rows.reduce(
             (total, event) =>

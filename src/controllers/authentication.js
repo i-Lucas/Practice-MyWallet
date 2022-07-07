@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-import connection from '../config/db.js';
+import userRepository from '../repositories/userRepository.js';
 import '../config/setup.js';
 
 export async function PostSingupController(req, res) {
@@ -11,16 +11,11 @@ export async function PostSingupController(req, res) {
 
         if (!name || !email || !password) return res.sendStatus(422);
 
-        const existingUsers = await connection.query(`SELECT * FROM "users" WHERE "email"=$1`, [email]);
+        const existingUsers = await userRepository.GetUserByEmail(email);
         if (existingUsers.rowCount > 0) return res.sendStatus(409);
 
         const hashedPassword = bcrypt.hashSync(password, 12);
-
-        await connection.query(
-            `INSERT INTO 'users' ('name', 'email', 'password') VALUES ($1, $2, $3)`,
-            [name, email, hashedPassword]
-        );
-
+        await userRepository.CreateUser(name, email, hashedPassword);
         res.sendStatus(201);
 
     } catch (err) { return res.status(500).send(err) }
@@ -34,7 +29,7 @@ export async function PostSinginController(req, res) {
 
         if (!email || !password) return res.sendStatus(422);
 
-        const { rows } = await connection.query(`SELECT * FROM "users" WHERE "email"=$1`, [email]);
+        const { rows } = await userRepository.GetUserByEmail(email);
         const [user] = rows;
 
         if (!user || !bcrypt.compareSync(password, user.password)) return res.sendStatus(401);
